@@ -11,3 +11,5 @@ This is the first prototype of the sick-tierlist-server script.
 
 In future we will be able to choose between ssh key paths and using the ssh agent for authentication.
 Also specifying the client repository and branch should be configurable (currently hardcoded in `deploy.js`).
+
+Maybe we add multiple deploy strategies, to for example serve the tierlists from a seperate CDN as API endpoint.
