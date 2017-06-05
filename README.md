@@ -5,9 +5,8 @@ The idea is for this script to be used as a cron to keep the client repository u
 This is the first prototype of the sick-tierlist-server script.
 
 ## How to use
-1. You need full access to `git@github.com:milanju/sick-tierlist.git`.
-2. An `sshConfig.js` file is required in the project root with paths to your ssh keys. There is an `sshConfig.example.js` for reference.
-3. Run `node index.js`
+1. An `sshConfig.js` file is required in the project root with paths to your ssh keys and a git ssh url to your client repository. There is an `sshConfig.example.js` for reference. This script will commit a `tierlists.json` to the master branch root directory root of your client repository.
+2. Run `node index.js`
 
 In future we will be able to choose between ssh key paths and using the ssh agent for authentication.
 Also specifying the client repository and branch should be configurable (currently hardcoded in `deploy.js`).

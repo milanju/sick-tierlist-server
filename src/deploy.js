@@ -4,13 +4,13 @@ const fse = promisify(require('fs-extra'));
 const git = require('nodegit');
 const rimraf = require('rimraf');
 fse.ensureDir = promisify(fse.ensureDir);
-const { gitName, gitEmail, sshPrivateKeyPath, sshPublicKeyPath } = require('../sshConfig');
+const { gitName, gitEmail, gitSshUrl, sshPrivateKeyPath, sshPublicKeyPath } = require('../sshConfig');
 
 /**
  * Commit new TierList to repository.
  */
 function deploy(json) {
-    const repoUrl = 'git@github.com:milanju/sick-tierlist.git'
+    const repoUrl = gitSshUrl;
     const commitMessage = 'new tierlist';
     const tmpDir = './sick-tierlist-tmp';
 
