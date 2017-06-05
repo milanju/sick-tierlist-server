@@ -10,10 +10,22 @@ const { gitName, gitEmail, sshPrivateKeyPath, sshPublicKeyPath } = require('../s
  * Commit new TierList to repository.
  */
 function deploy(json) {
-    const cleanupPromise = new Promise((resolve, reject) => {
-        rimraf('./tmp', resolve);
-    });
+    const repoUrl = 'git@github.com:milanju/sick-tierlist.git'
+    const commitMessage = 'new tierlist';
+    const tmpDir = './sick-tierlist-tmp';
 
+    return gitDeploy(tmpDir, repoUrl, commitMessage, json);
+}
+
+function cleanTmpDir(dir) {
+    return new Promise((resolve, reject) => {
+        rimraf(dir, {}, function() {
+            resolve();
+        });
+    });
+}
+
+function gitDeploy(tmpDir, repoUrl, commitMessage, json) {
     const signature = git.Signature.now(gitName, gitEmail);
 
     let repo;
@@ -45,8 +57,8 @@ function deploy(json) {
     }
 
     console.log('Git deploy process: started.');
-    return cleanupPromise
-        .then(() => git.Clone('git@github.com:milanju/sick-tierlist.git', './tmp', {
+    return cleanTmpDir(tmpDir)
+        .then(() => git.Clone(repoUrl, tmpDir, {
             fetchOpts: {
                 callbacks: {
                         credentials: credentialsCallback
@@ -82,7 +94,7 @@ function deploy(json) {
                 'HEAD',
                 signature,
                 signature,
-                'new tierlist',
+                commitMessage,
                 oid,
                 [parent]
             );
@@ -92,7 +104,7 @@ function deploy(json) {
         })
         .then(remoteResult => {
             remote = remoteResult;
-            console.log(remote);
+            
             return remote.push(
                 ['refs/heads/master:refs/heads/master'],
                 {
@@ -104,6 +116,12 @@ function deploy(json) {
         })
         .then(() => {
             console.log('Git deploy process: done.');
+            /**
+             * Would love to cleanup the tmp dir here, but rimraf never calls the callback (or deletes the dir).
+             * I guess nodegit locks the directory, and I haven't found a way to unlock it (or see any error from rimraf).
+             */
+            // return cleanTmpDir(tmpDir);
+            return Promise.resolve();
         });
 }
 
