@@ -4,7 +4,7 @@ const fse = promisify(require('fs-extra'));
 const git = require('nodegit');
 const rimraf = require('rimraf');
 fse.ensureDir = promisify(fse.ensureDir);
-const { gitName, gitEmail, sshPrivateKeyPath, sshPublicKeyPath } = require('./sshConfig');
+const { gitName, gitEmail, sshPrivateKeyPath, sshPublicKeyPath } = require('../sshConfig');
 
 /**
  * Commit new TierList to repository.
@@ -92,6 +92,7 @@ function deploy(json) {
         })
         .then(remoteResult => {
             remote = remoteResult;
+            console.log(remote);
             return remote.push(
                 ['refs/heads/master:refs/heads/master'],
                 {
